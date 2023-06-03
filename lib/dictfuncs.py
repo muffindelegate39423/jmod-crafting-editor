@@ -1,6 +1,6 @@
 import json
 
-def add_materials(craftable, materialsList, materialsKey):
+def add_to_materials(craftable, materialsList, materialsKey):
     try:
         for val in craftable[materialsKey]:
             if val not in materialsList:

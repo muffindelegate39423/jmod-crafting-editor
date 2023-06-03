@@ -10,7 +10,7 @@ known_categories = []
 known_craftingTypes = []
 
 def open_config():
-    global jmod_config_txt, path_ini
+    global jmod_config_txt
     try:
         jmod_config_txt = open(path_ini,'r').read()
         if dictfuncs.is_valid_config(jmod_config_txt) == False:
@@ -41,7 +41,7 @@ def load_data():
     global craftables
     craftables = json.loads(open(jmod_config_txt,'r').read())["Craftables"]
     for c in craftables:
-        dictfuncs.add_materials(craftables[c],known_craftingReqs,"craftingReqs")
+        dictfuncs.add_to_materials(craftables[c],known_craftingReqs,"craftingReqs")
         dictfuncs.add_to_keyList(craftables[c],known_categories,"category")
         dictfuncs.add_to_keyList(craftables[c],known_craftingTypes,"craftingType")
     known_craftingReqs.sort()
