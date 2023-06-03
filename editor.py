@@ -16,7 +16,7 @@ def open_config():
     except:
         tkinter.messagebox.showwarning(title="Attention", message="temp")
         jmod_config_txt = tkinter.filedialog.askopenfilename(
-            defaultextension=".json",
+            defaultextension=".txt",
             filetypes=[("JMod config file", "*.txt"), ("All files", "*.*")]
         )
         if not jmod_config_txt:
