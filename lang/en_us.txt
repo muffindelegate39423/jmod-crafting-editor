@@ -1,0 +1,12 @@
+[MESSAGEBOX]
+error = Error
+info = Attention
+
+[CONFIGFILE]
+cannot_read = Config file cannot be read. Please select a valid config file.
+select = Please select a JMod config file.
+invalid = Invalid config file.
+
+[FILETYPES]
+jmod = JMod config file
+all = All files
