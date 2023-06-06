@@ -7,6 +7,9 @@ cannot_read = Config file cannot be read. Please select a valid config file.
 select = Please select a JMod config file.
 invalid = Invalid config file.
 
-[FILETYPES]
+[FILETYPE]
 jmod = JMod config file
 all = All files
+
+[WINDOW]
+main = JMod Crafting Editor

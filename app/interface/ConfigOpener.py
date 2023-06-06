@@ -1,12 +1,7 @@
-import tkinter.messagebox, tkinter.filedialog
 from ..lib import dictfuncs
+import tkinter.messagebox, tkinter.filedialog
 
 class ConfigOpener:
-    jmod_config_txt = ""
-    setup_ini = ""
-    setup = []
-    lang = []
-
     def __init__(self,ini,s,l):
         self.setup_ini = ini
         self.setup = s
@@ -29,7 +24,7 @@ class ConfigOpener:
         while valid == False:
             self.jmod_config_txt = tkinter.filedialog.askopenfilename(
                 defaultextension=".txt",
-                filetypes=[(self.lang["FILETYPES"]["jmod"],"*.txt"),(self.lang["FILETYPES"]["all"],"*.*")]
+                filetypes=[(self.lang["FILETYPE"]["jmod"],"*.txt"),(self.lang["FILETYPE"]["all"],"*.*")]
             )
             if not self.jmod_config_txt:
                 exit()
