@@ -3,9 +3,13 @@ import tkinter.messagebox, tkinter.filedialog
 
 class ConfigOpener:
     def __init__(self,ini,s,l):
+        # setup.ini
         self.setup_ini = ini
+        # setup
         self.setup = s
+        # lang
         self.lang = l
+        # jmod_config.txt
         self.jmod_config_txt = self.setup["DEFAULT"]["path"]
 
     def launch_reading_config(self):
@@ -18,7 +22,7 @@ class ConfigOpener:
         except FileNotFoundError:
             tkinter.messagebox.showerror(title=self.lang["MESSAGEBOX"]["error"],message=self.lang["CONFIGFILE"]["cannot_read"])
             self.open_config()
-
+    
     def open_config(self):
         valid = False
         while valid == False:

@@ -1,6 +1,7 @@
 [MESSAGEBOX]
 error = Error
 info = Attention
+question = Confirm
 
 [CONFIGFILE]
 cannot_read = Config file cannot be read. Please select a valid config file.
@@ -13,3 +14,12 @@ all = All files
 
 [WINDOW]
 main = JMod Crafting Editor
+pending = Pending Craftables to Delete
+
+[WIDGET]
+craftables = {count} craftables
+selected = {count} selected
+
+[CRAFTABLE]
+pending = You are about to delete these craftables.{newline}Press the 'Delete' button below to proceed.
+delete = Are you sure you want to delete {count} craftables?

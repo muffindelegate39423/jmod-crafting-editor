@@ -5,7 +5,6 @@ import configparser, os
 
 setup_ini = os.path.join(os.path.dirname(__file__),"setup.ini")
 language_dir = os.path.join(os.path.dirname(__file__),"lang/")
-
 setup = configparser.ConfigParser()
 lang = configparser.ConfigParser()
 

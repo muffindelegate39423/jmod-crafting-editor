@@ -1,6 +1,6 @@
 import json
 
-def insert_from_2D_dict(craftable, keyList, key):
+def __insert_from_2D_dict(craftable,keyList,key):
     try:
         for val in craftable[key]:
             if val not in keyList:
@@ -8,7 +8,7 @@ def insert_from_2D_dict(craftable, keyList, key):
     except KeyError:
         pass
 
-def insert_from_1D_dict(craftable, keyList, key):
+def __insert_from_1D_dict(craftable,keyList,key):
     try:
         val = craftable[key]
         if val not in keyList:
@@ -18,7 +18,20 @@ def insert_from_1D_dict(craftable, keyList, key):
 
 def is_valid_config(config_txt):
     try:
-        temp = json.loads(open(config_txt,'r').read())["Craftables"]
+        temp = get_craftables(config_txt)
         return True
     except:
         return False
+
+def get_craftables(config_txt):
+    return json.loads(open(config_txt,'r').read())["Craftables"]
+
+def get_craftable_properties(craftables,craftableNames,knownCraftingReqs,knownCategories,knownCraftingTypes):
+    for c in craftables:
+        craftableNames.append(c)
+        __insert_from_2D_dict(craftables[c],knownCraftingReqs,"craftingReqs")
+        __insert_from_1D_dict(craftables[c],knownCategories,"category")
+        __insert_from_1D_dict(craftables[c],knownCraftingTypes,"craftingType")
+    knownCraftingReqs.sort()
+    knownCategories.sort()
+    knownCraftingTypes.sort()
