@@ -18,12 +18,12 @@ class MainWindow:
         self.display()
     
     def load_data(self):
-        self.craftables = dictfuncs.get_craftables(self.jmod_config_txt)
+        self.craftables_dict = dictfuncs.get_craftables(self.jmod_config_txt)
         self.craftable_names = []
         self.known_craftingReqs = []
         self.known_categories = []
         self.known_craftingTypes = []
-        dictfuncs.get_craftable_properties(self.craftables,self.craftable_names,self.known_craftingReqs,self.known_categories,self.known_craftingTypes)
+        dictfuncs.get_craftable_properties(self.craftables_dict,self.craftable_names,self.known_craftingReqs,self.known_categories,self.known_craftingTypes)
     
     def display(self):
         # window
@@ -34,5 +34,5 @@ class MainWindow:
         # path frame
         path_frame = widgets.PathFrame(root,0,0,self.jmod_config_txt)
         # craftables list frame
-        craftables_list_frame = widgets.CraftablesListFrame(root,1,0,self.craftable_names,self.lang)
+        craftables_list_frame = widgets.CraftablesListFrame(root,1,0,self.craftables_dict,self.craftable_names,self.lang)
         tkinter.mainloop()

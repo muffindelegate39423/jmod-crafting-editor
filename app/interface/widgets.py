@@ -14,11 +14,13 @@ class PathFrame:
         self.pathLabel.pack(padx=1,pady=1)
 
 class CraftablesListFrame:
-    def __init__(self,parent,rowNum,columnNum,craftableNames,l):
+    def __init__(self,parent,rowNum,columnNum,craftablesDict,craftableNames,l):
         # parent
         self.Parent = parent
         # lang
         self.lang = l
+        # craftables dict
+        self.craftables_dict = craftablesDict
         # craftable names
         self.craftable_names = craftableNames
         # list frame
@@ -30,20 +32,28 @@ class CraftablesListFrame:
         self.craftablesListbox.pack(ipadx=45,ipady=130)
         # count label
         self.countTextVar = tkinter.StringVar()
-        self.update_count_text(self.craftable_names)
         self.countLabel = tkinter.Label(self.listFrame,textvariable=self.countTextVar,font=("TkDefaultFont",10,"bold"))
         self.countLabel.pack()
         # selected label
         self.selectedTextVar = tkinter.StringVar()
-        self.craftablesListbox.bind("<<ListboxSelect>>", self.update_selected_text)
-        self.craftablesListbox.bind("<Delete>", self.open_pending_window)
+        self.craftablesListbox.bind("<<ListboxSelect>>",lambda event:self.update_selected_text())
+        self.craftablesListbox.bind("<Delete>",self.open_pending_window)
         self.selectedLabel = RainbowLabel(self.listFrame,self.selectedTextVar,"TkDefaultFont",10,"bold")
-    
-    def update_count_text(self,craftable_names):
+        # refresh widget contents
+        self.refresh(self.craftable_names)
+
+    def refresh(self,craftable_names):
+        # update craftables listbox
+        self.craftablesListbox.delete(0,"end")
+        for c in self.craftable_names:
+            self.craftablesListbox.insert("end",c)
+        # update craftable count
         newText = self.lang["WIDGET"]["craftables"].format(count = str(len(craftable_names)))
         self.countTextVar.set(newText)
-
-    def update_selected_text(self,event):
+        # update selected count
+        self.update_selected_text()
+    
+    def update_selected_text(self):
         newText = ""
         count = len(self.craftablesListbox.curselection())
         if count > 0:
@@ -55,7 +65,7 @@ class CraftablesListFrame:
         count = len(selected)
         if count > 0:
             arrayfuncs.map_indexes(selected,self.craftable_names)
-            pending_window = PendingWindow(self.Parent,self.lang,selected)
+            pending_window = PendingWindow(self.Parent,self.lang,self.craftables_dict,selected,self.craftable_names,self.refresh)
 
 class PendingListbox:
     def __init__(self,parent,rowNum,columnNum,selectedCraftables):

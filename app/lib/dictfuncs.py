@@ -35,3 +35,7 @@ def get_craftable_properties(craftables,craftableNames,knownCraftingReqs,knownCa
     knownCraftingReqs.sort()
     knownCategories.sort()
     knownCraftingTypes.sort()
+
+def remove_craftables(craftablesDict,selectedCraftables):
+    for s in selectedCraftables:
+        del craftablesDict[s]
