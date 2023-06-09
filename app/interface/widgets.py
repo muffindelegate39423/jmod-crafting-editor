@@ -55,9 +55,6 @@ class CraftablesListFrame:
         # update craftables listbox
         self.update_matching_craftables(self.craftable_names)
         self.update_listbox(self.craftable_names)
-        # update craftable count
-        newText = self.lang["WIDGET"]["craftables"].format(count = str(len(self.craftable_names)))
-        self.countTextVar.set(newText)
         # update selected count
         self.update_selected_text()
 
@@ -79,6 +76,9 @@ class CraftablesListFrame:
         self.craftablesListbox.delete(0,"end")
         for c in craftableNames:
             self.craftablesListbox.insert("end",c)
+        # update craftable count
+        newText = self.lang["WIDGET"]["craftables"].format(count = str(len(self.matching_craftables)))
+        self.countTextVar.set(newText)
     
     def update_selected_text(self):
         newText = ""
@@ -121,24 +121,18 @@ class CraftableSearchbar:
     
     def focus_out(self):
         curText = self.entryVar.get()
-        if self.is_blank_space(curText) == True:
+        if curText.isspace() == True or curText == "":
             self.entryVar.set(self.default_text)
             self.searchbarEntry.config(fg="gray")
 
     def search(self):
         curText = self.entryVar.get()
-        if self.is_blank_space(curText) == False:
+        if curText.isspace() == False:
             matching_items = arrayfuncs.get_matching_items(curText,self.craftable_names)
             self.craftables_listbox.update_matching_craftables(matching_items)
             self.craftables_listbox.update_listbox(matching_items)
         else:
             self.craftables_listbox.refresh()
-
-    def is_blank_space(self,string):
-        if string == "\n" or string == "":
-            return True
-        else:
-            return False
 
 class CraftableEditColumn:
     def __init__(self,parent,rowNum,columnNum,craftablesDict,knownCategories,knownCraftingTypes,l):
