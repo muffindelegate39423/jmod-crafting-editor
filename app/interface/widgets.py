@@ -1,7 +1,7 @@
 from .PendingWindow import *
 from ..lib import strmanip, arrayfuncs
 from itertools import cycle
-import tkinter, tkinter.messagebox
+import tkinter, tkinter.ttk, tkinter.messagebox
 import configparser
 
 class PathFrame:
@@ -83,7 +83,7 @@ class CraftablesListFrame:
             pending_window = PendingWindow(self.Parent,self.lang,self.craftables_dict,selected,self.craftable_names,self.refresh)
 
 class CraftableEditColumn:
-    def __init__(self,parent,rowNum,columnNum,craftablesDict,l):
+    def __init__(self,parent,rowNum,columnNum,craftablesDict,knownCategories,knownCraftingTypes,l):
         # lang
         self.lang = l
         # craftables dict
@@ -91,16 +91,22 @@ class CraftableEditColumn:
         # edit frame
         self.editFrame = tkinter.Frame(parent)
         self.editFrame.grid(row=rowNum,column=columnNum)
-        # name label
-        self.nameLabel = tkinter.Label(self.editFrame,text=self.lang["CRAFTABLE"]["name"]).grid(row=0,column=0,sticky="w")
-        # name entry
-        self.nameVar = tkinter.StringVar()
-        self.nameEntry = tkinter.Entry(self.editFrame,textvariable=self.nameVar).grid(row=0,column=1,sticky="w")
+        # name frame
+        self.name_frame = FancyEntry(self.editFrame,0,0,self.lang["CRAFTABLE"]["name"])
         # size scale frame
         self.size_scale_frame = SizeScaleFrame(self.editFrame,1,0,self.lang)
+        self.size_scale_frame.disable_spinbox()
+        # category frame
+        self.category_frame = FancyCombobox(self.editFrame,3,0,self.lang["CRAFTABLE"]["category"],knownCategories)
+        # crafting type frame
+        self.craftingType_frame = FancyCombobox(self.editFrame,4,0,self.lang["CRAFTABLE"]["craftingType"],knownCraftingTypes)
+        # results frame
+        self.results_frame = FancyEntry(self.editFrame,5,0,self.lang["CRAFTABLE"]["results"])
+        # description box
+        self.description_box = DescriptionBox(self.editFrame,6,0,self.lang)
 
     def load_info(self,craftableName):
-        self.nameVar.set(craftableName)
+        self.name_frame.set_entry(craftableName)
         sizeScale = []
         craftingReqs = []
         results = []
@@ -108,22 +114,129 @@ class CraftableEditColumn:
         craftingType = []
         description = []
         dictfuncs.get_craftable_data(self.craftables_dict,craftableName,sizeScale,craftingReqs,results,category,craftingType,description)
-        #TO-DO
+        if len(sizeScale) == 1:
+            self.size_scale_frame.enable_spinbox()
+            self.size_scale_frame.set_size_scale(sizeScale[0])
+        else:
+            self.size_scale_frame.disable_spinbox()
+        if len(results) == 1:
+            self.results_frame.set_entry(results[0])
+        if len(category) == 1:
+            self.category_frame.set_combobox(category[0])
+        if len(craftingType) == 1:
+            self.craftingType_frame.set_combobox(craftingType[0])
+        if len(description) == 1:
+            self.description_box.set_text(description[0])
 
-class SizeScaleFrame:
+class FancyEntry:
+    def __init__(self,parent,rowNum,columnNum,labelStr):
+        # fancy frame
+        self.fancyFrame = tkinter.Frame(parent)
+        self.fancyFrame.grid(row=rowNum,column=columnNum,sticky="w")
+        # fancy label
+        self.fancyLabel = tkinter.Label(self.fancyFrame,text=labelStr,font=("TkDefaultFont",10,"underline")).grid(row=0,column=0,sticky="w")
+        # fancy entry
+        self.entryVar = tkinter.StringVar()
+        self.fancyEntry = tkinter.Entry(self.fancyFrame,textvariable=self.entryVar,width=25).grid(row=1,column=0,sticky="w")
+
+    def set_entry(self,string):
+        self.entryVar.set(string)
+    
+    def get_entry(self,string):
+        self.entryVar.get(string)
+
+class FancyCombobox:
+    def __init__(self,parent,rowNum,columnNum,labelStr,optionsList):
+        # fancy frame
+        self.fancyFrame = tkinter.Frame(parent)
+        self.fancyFrame.grid(row=rowNum,column=columnNum,sticky="w")
+        # fancy label
+        self.fancyLabel = tkinter.Label(self.fancyFrame,text=labelStr,font=("TkDefaultFont",10,"underline")).grid(row=0,column=0,sticky="w")
+        # fancy combobox
+        self.comboboxVar = tkinter.StringVar()
+        self.fancyCombobox = tkinter.ttk.Combobox(self.fancyFrame,textvariable=self.comboboxVar,values=optionsList,width=25).grid(row=1,column=0,sticky="w")
+
+    def set_combobox(self,string):
+        self.comboboxVar.set(string)
+
+    def get_combobox(self,string):
+        self.comboboxVar.get(string)
+
+class DescriptionBox:
     def __init__(self,parent,rowNum,columnNum,l):
         # lang
         self.lang = l
-        # size scale frame
-        self.editFrame = tkinter.Frame(parent)
-        self.editFrame.grid(row=rowNum,column=columnNum,columnspan=2,sticky="e")
-        # scale check
-        self.scaleCheck = tkinter.Checkbutton(self.editFrame,text=self.lang["CRAFTABLE"]["scale"]).grid(row=1,column=0,sticky="w")
-        self.scaleSpinbox = tkinter.Spinbox(self.editFrame,from_=0,to=1000,width=3).grid(row=1,column=1,sticky="w")
+        # description frame
+        self.descriptionFrame = tkinter.Frame(parent)
+        self.descriptionFrame.grid(row=rowNum,column=columnNum,columnspan=2,sticky="w")
+        # description label
+        self.descriptionLabel = tkinter.Label(self.descriptionFrame,text=self.lang["CRAFTABLE"]["description"],font=("TkDefaultFont",10,"underline")).grid(row=0,column=0,sticky="w")
+        # description text box
+        self.descriptionText = tkinter.Text(self.descriptionFrame,height=5,width=25,font=("TkDefaultFont"))
+        self.descriptionText.grid(row=1,column=0,columnspan=2,sticky="w")
 
-    def load_size_scale(self,sizeScale):
-        #TO-DO
-        pass
+    def set_text(self,string):
+        self.clear_text()
+        self.descriptionText.insert("1.0",string)
+    
+    def clear_text(self):
+        self.descriptionText.delete("1.0","end")
+
+    def get_text(self):
+        text = self.descriptionText.get("1.0","end")
+        return text
+
+class SizeScaleFrame:
+    def __init__(self,parent,rowNum,columnNum,l):
+        # constants
+        self.CHECKBOX_ONVALUE = "enable"
+        self.CHECKBOX_OFFVALUE = "disable"
+        self.SPINBOX_DEFAULTVALUE = 1.0
+        self.SPINBOX_ROWNUM = 0
+        self.SPINBOX_COLUMNNUM = 1
+        # lang
+        self.lang = l
+        # size scale frame
+        self.scaleFrame = tkinter.Frame(parent)
+        self.scaleFrame.grid(row=rowNum,column=columnNum,columnspan=2,sticky="w")
+        # scale checkbox
+        self.checkboxVar = tkinter.StringVar()
+        self.scaleCheckbox = tkinter.Checkbutton(self.scaleFrame,
+                                                text=self.lang["CRAFTABLE"]["scale"],
+                                                command=self.check_value,
+                                                variable=self.checkboxVar,
+                                                onvalue=self.CHECKBOX_ONVALUE,
+                                                offvalue=self.CHECKBOX_OFFVALUE
+                                                ).grid(row=0,column=0)
+        # scale spinbox
+        self.spinboxVar = tkinter.DoubleVar(value=self.SPINBOX_DEFAULTVALUE)
+        self.scaleSpinbox = tkinter.Spinbox(self.scaleFrame,textvariable=self.spinboxVar,format="%.1f",increment=0.1,from_=0,to=100,width=4)
+        self.scaleSpinbox.grid(row=self.SPINBOX_ROWNUM,column=self.SPINBOX_COLUMNNUM)
+
+    def set_size_scale(self,sizeScale):
+        self.spinboxVar.set(sizeScale)
+
+    def is_checkbox_enabled(self):
+        value = self.checkboxVar.get()
+        if value == self.CHECKBOX_ONVALUE:
+            return True
+        else:
+            return False
+
+    def check_value(self):
+        if self.is_checkbox_enabled() == True:
+            self.enable_spinbox()
+        else:
+            self.disable_spinbox()
+
+    def disable_spinbox(self):
+        self.spinboxVar.set(self.SPINBOX_DEFAULTVALUE)
+        self.checkboxVar.set(self.CHECKBOX_OFFVALUE)
+        self.scaleSpinbox.grid_forget()
+
+    def enable_spinbox(self):
+        self.checkboxVar.set(self.CHECKBOX_ONVALUE)
+        self.scaleSpinbox.grid(row=self.SPINBOX_ROWNUM,column=self.SPINBOX_COLUMNNUM)
 
 class PendingListbox:
     def __init__(self,parent,rowNum,columnNum,selectedCraftables):

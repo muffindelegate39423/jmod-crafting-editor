@@ -41,7 +41,7 @@ class MainWindow:
         # path frame
         path_frame = widgets.PathFrame(root,0,0,self.jmod_config_txt)
         # craftable edit column
-        craftable_edit_column = widgets.CraftableEditColumn(root,1,1,self.craftables_dict,self.lang)
+        craftable_edit_column = widgets.CraftableEditColumn(root,1,1,self.craftables_dict,self.known_categories,self.known_craftingTypes,self.lang)
         # craftables list frame
         craftables_list_frame = widgets.CraftablesListFrame(root,1,0,self.craftables_dict,self.craftable_names,craftable_edit_column,self.lang)
         # mainloop
