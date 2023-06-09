@@ -48,5 +48,5 @@ class PendingWindow:
             dictfuncs.remove_craftables(self.craftables_dict,self.selected_craftables)
             for s in self.selected_craftables:
                 self.craftable_names.remove(s)
-            self.refresh_command(self.craftable_names)
+            self.refresh_command()
         self.root.destroy()

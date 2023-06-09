@@ -19,6 +19,7 @@ pending = Pending Craftables to Delete
 [WIDGET]
 craftables = {count} craftables
 selected = {count} selected
+search = Search for craftable
 
 [CRAFTABLE]
 pending = You are about to delete these craftables.{newline}Press the 'Delete' button below to proceed.
@@ -28,4 +29,4 @@ scale = Size Scale
 results = Result/Output
 description = Description
 category = Category
-craftingType = Crafting Type
+crafting_type = Crafting Type

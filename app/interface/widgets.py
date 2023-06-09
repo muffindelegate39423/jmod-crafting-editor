@@ -23,14 +23,19 @@ class CraftablesListFrame:
         self.craftables_dict = craftablesDict
         # craftable names
         self.craftable_names = craftableNames
+        # matching craftables (from search)
+        self.matching_craftables = self.craftable_names
         # craftable edit column
         self.craftable_edit_column = craftableEditColumn
         # list frame
         self.listFrame = tkinter.Frame(parent)
         self.listFrame.grid(row=rowNum,column=columnNum)
-        # craftables listbox
+        # craftables listbox (no pack)
         self.craftablesList = tkinter.Variable(value=self.craftable_names)
         self.craftablesListbox = tkinter.Listbox(self.listFrame,listvariable=self.craftablesList,selectmode="extended")
+        # craftable searchbar
+        self.craftable_searchbar = CraftableSearchbar(self.listFrame,self.lang["WIDGET"]["search"],self.craftable_names,self)
+        # pack craftables listbox
         self.craftablesListbox.pack(ipadx=45,ipady=130)
         # count label
         self.countTextVar = tkinter.StringVar()
@@ -44,15 +49,14 @@ class CraftablesListFrame:
         # last selection
         self.lastSelection = ""
         # refresh widget contents
-        self.refresh(self.craftable_names)
+        self.refresh()
 
-    def refresh(self,craftable_names):
+    def refresh(self):
         # update craftables listbox
-        self.craftablesListbox.delete(0,"end")
-        for c in self.craftable_names:
-            self.craftablesListbox.insert("end",c)
+        self.update_matching_craftables(self.craftable_names)
+        self.update_listbox(self.craftable_names)
         # update craftable count
-        newText = self.lang["WIDGET"]["craftables"].format(count = str(len(craftable_names)))
+        newText = self.lang["WIDGET"]["craftables"].format(count = str(len(self.craftable_names)))
         self.countTextVar.set(newText)
         # update selected count
         self.update_selected_text()
@@ -61,12 +65,20 @@ class CraftablesListFrame:
         temp = self.craftablesListbox.curselection()
         if len(temp) > 0:
             curSelection = [temp[-1]]
-            arrayfuncs.map_indexes(curSelection,self.craftable_names)
+            arrayfuncs.map_indexes(curSelection,self.matching_craftables)
             curSelection = curSelection[-1]
             if curSelection != self.lastSelection:
                 self.lastSelection = curSelection
                 self.craftable_edit_column.load_info(self.lastSelection)
         self.update_selected_text()
+
+    def update_matching_craftables(self,newMatchlist):
+        self.matching_craftables = newMatchlist
+
+    def update_listbox(self,craftableNames):
+        self.craftablesListbox.delete(0,"end")
+        for c in craftableNames:
+            self.craftablesListbox.insert("end",c)
     
     def update_selected_text(self):
         newText = ""
@@ -79,8 +91,54 @@ class CraftablesListFrame:
         selected = list(self.craftablesListbox.curselection())
         count = len(selected)
         if count > 0:
-            arrayfuncs.map_indexes(selected,self.craftable_names)
+            arrayfuncs.map_indexes(selected,self.matching_craftables)
             pending_window = PendingWindow(self.Parent,self.lang,self.craftables_dict,selected,self.craftable_names,self.refresh)
+
+class CraftableSearchbar:
+    def __init__(self,parent,defaultText,craftableNames,craftablesListbox):
+        # default text
+        self.default_text = defaultText
+        # craftable names
+        self.craftable_names = craftableNames
+        # craftables listbox
+        self.craftables_listbox = craftablesListbox
+        # searchbar frame
+        self.searchbarFrame = tkinter.Frame(parent)
+        self.searchbarFrame.pack()
+        # searchbar entry
+        self.entryVar = tkinter.StringVar()
+        self.searchbarEntry = tkinter.Entry(self.searchbarFrame,textvariable=self.entryVar,width=30,fg="gray")
+        self.focus_out()
+        self.searchbarEntry.pack()
+        # searchbar binds
+        self.searchbarEntry.bind("<FocusIn>",lambda event:self.focus_in())
+        self.searchbarEntry.bind("<FocusOut>",lambda event:self.focus_out())
+        self.searchbarEntry.bind('<KeyRelease>',lambda event:self.search())
+
+    def focus_in(self):
+        self.entryVar.set("")
+        self.searchbarEntry.config(fg="black")
+    
+    def focus_out(self):
+        curText = self.entryVar.get()
+        if self.is_blank_space(curText) == True:
+            self.entryVar.set(self.default_text)
+            self.searchbarEntry.config(fg="gray")
+
+    def search(self):
+        curText = self.entryVar.get()
+        if self.is_blank_space(curText) == False:
+            matching_items = arrayfuncs.get_matching_items(curText,self.craftable_names)
+            self.craftables_listbox.update_matching_craftables(matching_items)
+            self.craftables_listbox.update_listbox(matching_items)
+        else:
+            self.craftables_listbox.refresh()
+
+    def is_blank_space(self,string):
+        if string == "\n" or string == "":
+            return True
+        else:
+            return False
 
 class CraftableEditColumn:
     def __init__(self,parent,rowNum,columnNum,craftablesDict,knownCategories,knownCraftingTypes,l):
@@ -99,7 +157,7 @@ class CraftableEditColumn:
         # category frame
         self.category_frame = FancyCombobox(self.editFrame,3,0,self.lang["CRAFTABLE"]["category"],knownCategories)
         # crafting type frame
-        self.craftingType_frame = FancyCombobox(self.editFrame,4,0,self.lang["CRAFTABLE"]["craftingType"],knownCraftingTypes)
+        self.craftingType_frame = FancyCombobox(self.editFrame,4,0,self.lang["CRAFTABLE"]["crafting_type"],knownCraftingTypes)
         # results frame
         self.results_frame = FancyEntry(self.editFrame,5,0,self.lang["CRAFTABLE"]["results"])
         # description box
