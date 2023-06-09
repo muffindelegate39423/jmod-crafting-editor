@@ -32,9 +32,20 @@ def get_craftable_properties(craftables,craftableNames,knownCraftingReqs,knownCa
         __insert_from_2D_dict(craftables[c],knownCraftingReqs,"craftingReqs")
         __insert_from_1D_dict(craftables[c],knownCategories,"category")
         __insert_from_1D_dict(craftables[c],knownCraftingTypes,"craftingType")
-    knownCraftingReqs.sort()
-    knownCategories.sort()
-    knownCraftingTypes.sort()
+
+def get_craftable_data(craftablesDict,craftableName,sizeScale,craftingReqs,results,category,craftingType,description):
+    data = craftablesDict[craftableName]
+    keys = {id(sizeScale): "sizescale", 
+            id(craftingReqs): "craftingReqs", 
+            id(results): "results", 
+            id(category): "category", 
+            id(craftingType): "craftingType", 
+            id(description): "description"}
+    for i in (sizeScale,craftingReqs,results,category,craftingType,description):
+        try:
+            i.append(data[keys[id(i)]])
+        except KeyError:
+            pass
 
 def remove_craftables(craftablesDict,selectedCraftables):
     for s in selectedCraftables:

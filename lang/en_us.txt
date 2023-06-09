@@ -23,3 +23,5 @@ selected = {count} selected
 [CRAFTABLE]
 pending = You are about to delete these craftables.{newline}Press the 'Delete' button below to proceed.
 delete = Are you sure you want to delete {count} craftables?
+name = Craftable Name
+scale = Size Scale
