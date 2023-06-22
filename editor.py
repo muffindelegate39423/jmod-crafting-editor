@@ -1,34 +1,30 @@
-from app.interface.ConfigOpener import *
-from app.interface.MainWindow import *
-import tkinter.messagebox
-import configparser, os
+from app.interface.gui_setup import *
+from configparser import ConfigParser
+from os import path
 
-setup_ini = os.path.join(os.path.dirname(__file__),"setup.ini")
-language_dir = os.path.join(os.path.dirname(__file__),"lang/")
-setup = configparser.ConfigParser()
-lang = configparser.ConfigParser()
+# launch procedure
+def main():
+    # setup and language paths
+    setup_ini = path.join(path.dirname(__file__),"setup.ini")
+    lang_dir = path.join(path.dirname(__file__),"lang")
+    setup = ConfigParser()
+    lang = ConfigParser()
+    # create setup.ini if it doesn't exist
+    if path.exists(setup_ini) == False:
+        create_setup_ini(setup,setup_ini)
+    else: # otherwise, load it
+        setup.read(setup_ini)
+    # proceed to setting up the gui
+    GuiSetup(setup=setup,
+             setup_ini=setup_ini,
+             lang_path=path.join(lang_dir,setup['DEFAULT']['lang']+".txt"),
+             config_path=setup['DEFAULT']['path'])
 
-def read_setup_ini():
-    if os.path.exists(setup_ini) == False:
-        create_setup_ini()
-    setup.read(setup_ini)
-    setup_lang()
-
-def create_setup_ini():
-    setup["DEFAULT"] = {"language": "en_us",
-                        "path": ""}
+# function that creates setup.ini
+def create_setup_ini(setup,setup_ini):
+    setup['DEFAULT'] = {'lang': 'en_us',
+                        'path': ''}
     setup.write(open(setup_ini,'w'))
 
-def setup_lang():
-    language = setup["DEFAULT"]["language"]
-    language_path = language_dir+language+".txt"
-    if os.path.exists(language_path) == True:
-        lang.read(language_path)
-    else:
-        tkinter.messagebox.showerror(title="Missing language file",message=language_path+" is missing. Program will now close.")
-        exit()
-
-read_setup_ini()
-opener = ConfigOpener(setup_ini,setup,lang)
-opener.launch_reading_config()
-gui = MainWindow(setup_ini,setup,lang)
+# execute program
+main()

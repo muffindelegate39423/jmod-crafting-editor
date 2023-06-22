@@ -1,52 +1,123 @@
-import json
+# returns supported jmod versions
+def _get_supported_versions():
+    supported_versions = ('40.0','40.6')
+    return supported_versions
 
-def __insert_from_2D_dict(craftable,keyList,key):
-    try:
-        for val in craftable[key]:
-            if val not in keyList:
-                keyList.append(val)
-    except KeyError:
-        pass
-
-def __insert_from_1D_dict(craftable,keyList,key):
-    try:
-        val = craftable[key]
-        if val not in keyList:
-            keyList.append(val)
-    except KeyError:
-        pass
-
+# is the config valid (readable)?
 def is_valid_config(config_txt):
     try:
-        temp = get_craftables(config_txt)
+        temp = config_txt['Craftables']
+        temp = config_txt['Version']
         return True
     except:
         return False
 
-def get_craftables(config_txt):
-    return json.loads(open(config_txt,'r').read())["Craftables"]
+# returns jmod version from config file
+def get_jmod_version(config_txt):
+    return config_txt['Version']
 
-def get_craftable_properties(craftables,craftableNames,knownCraftingReqs,knownCategories,knownCraftingTypes):
-    for c in craftables:
-        craftableNames.append(c)
-        __insert_from_2D_dict(craftables[c],knownCraftingReqs,"craftingReqs")
-        __insert_from_1D_dict(craftables[c],knownCategories,"category")
-        __insert_from_1D_dict(craftables[c],knownCraftingTypes,"craftingType")
+# is the config file supported?
+def is_supported_version(jmod_version):
+    if str(jmod_version) in _get_supported_versions():
+        return True
+    else:
+        return False
 
-def get_craftable_data(craftablesDict,craftableName,sizeScale,craftingReqs,results,category,craftingType,description):
-    data = craftablesDict[craftableName]
-    keys = {id(sizeScale): "sizescale", 
-            id(craftingReqs): "craftingReqs", 
+# overrides current craftable data to jmod dict
+def set_craftable_data(jmod_dict,jmod_version,oldName,newName,size_scale,crafting_reqs,results,category,crafting_type,description):
+    # parse data in order
+    data = {}
+    data['craftingReqs'] = crafting_reqs
+    data['results'] = results
+    if size_scale != -1: # if size scale was enabled
+        data['sizescale'] = size_scale # set it
+    data['category'] = category
+    data['craftingType'] = crafting_type
+    data['description'] = description
+    # try to replace old craftable data
+    try:
+        jmod_dict['Craftables'][oldName] = data
+        if oldName != newName: # rename craftable
+            jmod_dict['Craftables'][newName] = jmod_dict['Craftables'].pop(oldName)
+    except KeyError: # if it's a new craftable then add it to dictionary
+        jmod_dict['Craftables'][newName] = data
+
+# retrieves current craftable data from jmod dict
+def get_craftable_data(jmod_dict,jmod_version,craftable_name,size_scale,crafting_reqs,results,category,crafting_type,description):
+    data = jmod_dict['Craftables'][craftable_name]
+    # keys for each data in the for loop
+    keys = {id(size_scale): "sizescale", 
+            id(crafting_reqs): "craftingReqs", 
             id(results): "results", 
             id(category): "category", 
-            id(craftingType): "craftingType", 
+            id(crafting_type): "craftingType", 
             id(description): "description"}
-    for i in (sizeScale,craftingReqs,results,category,craftingType,description):
+    # return each data to variables
+    for i in (size_scale,crafting_reqs,results,category,crafting_type,description):
         try:
             i.append(data[keys[id(i)]])
         except KeyError:
             pass
 
-def remove_craftables(craftablesDict,selectedCraftables):
-    for s in selectedCraftables:
-        del craftablesDict[s]
+# returns craftable name from jmod dict
+def get_craftable_names(jmod_dict,jmod_version):
+    temp = []
+    for c in jmod_dict['Craftables']:
+        temp.append(c)
+    return temp
+
+# removes selected craftables from jmod dict
+def remove_craftables(jmod_dict,jmod_version,selected_craftables):
+    for s in selected_craftables:
+        del jmod_dict['Craftables'][s]
+
+# returns categories from jmod dict
+def get_categories(jmod_dict,jmod_version):
+    temp = []
+    for c in jmod_dict['Craftables']:
+        try:
+            curCategory = jmod_dict['Craftables'][c]['category']
+            if curCategory not in temp:
+                temp.append(curCategory)
+        except KeyError:
+            pass
+    temp.sort()
+    return temp
+
+# returns crafting types from jmod dict
+def get_crafting_types(jmod_dict,jmod_version):
+    temp = []
+    for c in jmod_dict['Craftables']:
+        try:
+            curType = jmod_dict['Craftables'][c]['craftingType']
+            if curType not in temp:
+                temp.append(curType)
+        except KeyError:
+            pass
+    temp.sort()
+    return temp
+
+# returns crafting reqs from jmod dict
+def get_crafting_reqs(jmod_dict,jmod_version):
+    temp = []
+    for c in jmod_dict['Craftables']:
+        for r in jmod_dict['Craftables'][c]['craftingReqs']:
+            try:
+                if r not in temp:
+                    temp.append(r)
+            except KeyError:
+                pass
+    temp.sort()
+    return temp
+
+# creates new craftable in jmod dict
+def create_new_craftable(jmod_dict,jmod_version,craftable_name):
+    # assembles data in order
+    data = {}
+    data['craftingReqs'] = {}
+    data['results'] = ""
+    data['category'] = ""
+    data['craftingType'] = ""
+    data['description'] = ""
+    # add to dict
+    jmod_dict['Craftables'][craftable_name] = data

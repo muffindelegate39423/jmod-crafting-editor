@@ -2,11 +2,14 @@
 error = Error
 info = Attention
 question = Confirm
+warning = Warning
 
 [CONFIGFILE]
 cannot_read = Config file cannot be read. Please select a valid config file.
 select = Please select a JMod config file.
 invalid = Invalid config file.
+unsupported = The JMod version in this config file is unsupported: {version}. This program may encounter problems processing craftable data upon opening this config file.
+confirm_open = Are you sure you want to open this config file?
 
 [FILETYPE]
 jmod = JMod config file
@@ -14,12 +17,17 @@ all = All files
 
 [WINDOW]
 main = JMod Crafting Editor
-pending = Pending Craftables to Delete
+pending = To Delete
+about = About
 
 [WIDGET]
 craftables = {count} craftables
 selected = {count} selected
 search = Search for craftable
+apply = Apply Changes
+jmod_version = Config version: {version}
+material = Material
+amount = Amount
 
 [CRAFTABLE]
 pending = You are about to delete these craftables.{newline}Press the 'Delete' button below to proceed.
@@ -30,3 +38,44 @@ results = Result/Output
 description = Description
 category = Category
 crafting_type = Crafting Type
+crafting_reqs = Crafting Reqs
+new = new craftable
+blank = Craftable name cannot be blank!
+
+[MATERIAL]
+new = New
+edit = Edit
+delete = Delete
+new_material = new material
+
+[COMMAND]
+open = Open Config
+save = Save Config
+save_as = Save Config As...
+new = New Craftable
+delete = Delete Selected
+exit = Exit
+
+[MENU]
+file = File
+edit = Edit
+help = Help
+about = About
+
+[ABOUT]
+program = Unofficial JMod Crafting Editor
+version = Editor version: {version}
+github = GitHub
+copyright = Copyright © {years} {author}
+disclaimer = This program comes with absolutely no warranty. See LICENSE for more details.
+credits = Additional credits can be viewed in ATTRIBUTION.
+
+[DUMMY]
+dummy = Hello World!
+
+[DEBUG]
+internal = An internal error has occurred. Please contact the developer to fix!{newline}({error})
+
+[DELETE]
+delete = Delete
+cancel = Cancel
