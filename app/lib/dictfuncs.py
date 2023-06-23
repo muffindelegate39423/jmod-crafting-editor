@@ -1,20 +1,23 @@
 # returns supported jmod versions
 def _get_supported_versions():
-    supported_versions = ('40.0','40.6')
+    supported_versions = ('40.0','40.6','42.5')
     return supported_versions
 
 # is the config valid (readable)?
 def is_valid_config(config_txt):
-    try:
-        temp = config_txt['Craftables']
-        temp = config_txt['Version']
+    craftables_test = config_txt.get('Craftables',-1)
+    version_test = get_jmod_version(config_txt)
+    if craftables_test != -1 and version_test != -1:
         return True
-    except:
+    else:
         return False
 
 # returns jmod version from config file
 def get_jmod_version(config_txt):
-    return config_txt['Version']
+    version = config_txt.get('Version',-1)
+    if version == -1: # since around version 42.5
+        version = config_txt['Info'].get('Version',-1)
+    return version
 
 # is the config file supported?
 def is_supported_version(jmod_version):

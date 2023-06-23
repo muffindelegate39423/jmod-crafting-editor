@@ -2,7 +2,7 @@
 **I AM NOT RESPONSIBLE FOR ANY DATA LOSS. USE THIS PROGRAM AT YOUR OWN RISK!**
 
 ## Supported JMod Versions
-- **40.0, 40.6**
+- **40.0, 40.6, 42.5**
 
 ## Features
 - Search for craftable names

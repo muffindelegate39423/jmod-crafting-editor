@@ -4,6 +4,7 @@ from .delete_window import *
 from ..lib import dictfuncs, strmanip, arrayfuncs
 from configparser import ConfigParser
 from itertools import cycle
+import webbrowser
 
 _lang = []        # language data
 _jmod_dict = []   # jmod dictionary
@@ -186,6 +187,15 @@ class FrameWidget(tk.Frame):
     def get_available_row(self):
         available_row = self.grid_size()[1]
         return available_row
+
+# label that opens a weblink when clicked on
+class HyperlinkLabel(tk.Label):
+    def __init__(self,parent,text,link):
+        super().__init__(parent,
+                         text=text,
+                         font=('TkDefaultFont',10,'underline'),
+                         fg='blue',cursor='hand2')
+        self.bind('<Button-1>',lambda event:webbrowser.open_new_tab(link))
 
 # searchbar widget for accompanying listbox
 class ListboxSearchbar(EntryWidget):

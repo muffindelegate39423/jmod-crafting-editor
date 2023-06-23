@@ -1,8 +1,7 @@
 import tkinter as tk
 from .widgets import *
-import webbrowser
 
-_EDITOR_VERSION = "0.1.0-prerelease"
+_EDITOR_VERSION = "0.1.0"
 _COPYRIGHT_YEARS = "2023"
 _AUTHOR = "muffindelegate39423"
 _GITHUB_LINK = "https://github.com/muffindelegate39423/jmod-crafting-editor"
@@ -32,14 +31,10 @@ class AboutWindow(CommonWidget):
                                       font=('TkDefaultFont',10,'bold'))
         self.version_label.pack()
         # github label
-        self.github_label = tk.Label(self.about_frame,
-                                     text=self.lang['ABOUT']['github'],
-                                     font=('TkDefaultFont',10,'underline'),
-                                     fg='blue',
-                                     cursor='hand2')
+        self.github_label = HyperlinkLabel(self.about_frame,
+                                           text=self.lang['ABOUT']['github'],
+                                           link=_GITHUB_LINK)
         self.github_label.pack()
-        self.github_label.bind('<Button-1>',
-                               lambda event:webbrowser.open_new_tab(_GITHUB_LINK))
         # copyright label
         self.copyright_label = tk.Label(self.about_frame,
                                         text=self.lang['ABOUT']['copyright'].format(
