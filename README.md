@@ -1,6 +1,8 @@
 # Unofficial JMod Crafting Editor
 **I AM NOT RESPONSIBLE FOR ANY DATA LOSS. USE THIS PROGRAM AT YOUR OWN RISK!**
 
+![editor](img/editor.png)
+
 ## Supported JMod Versions
 - **40.0, 40.6, 42.5**
 
