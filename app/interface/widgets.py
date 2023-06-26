@@ -769,9 +769,10 @@ class CraftablesListFrame(CommonWidget):
     # opens delete window 
     # (requires at least 1 selected craftable to open)
     def open_delete_window(self):
-        selection_count = len(self.craftables_listbox.curselection())
+        selected_items = self.selected_label.get_selected_items()
+        selection_count = len(selected_items)
         if selection_count > 0:
-            selected_craftables = self.selected_label.get_selected_items()
+            selected_craftables = selected_items
             delete_window = DeleteWindow(CommonWidget,FrameWidget,
                                          listbox=self.craftables_listbox,
                                          selected_items=selected_craftables,

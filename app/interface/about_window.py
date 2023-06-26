@@ -1,7 +1,7 @@
 import tkinter as tk
 from .widgets import *
 
-_EDITOR_VERSION = "0.1.0"
+_EDITOR_VERSION = "0.2.0-prerelease"
 _COPYRIGHT_YEARS = "2023"
 _AUTHOR = "muffindelegate39423"
 _GITHUB_LINK = "https://github.com/muffindelegate39423/jmod-crafting-editor"
