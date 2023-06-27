@@ -6,6 +6,10 @@ _COPYRIGHT_YEARS = "2023"
 _AUTHOR = "muffindelegate39423"
 _GITHUB_LINK = "https://github.com/muffindelegate39423/jmod-crafting-editor"
 
+# function that returns current editor version
+def get_editor_version():
+    return _EDITOR_VERSION
+
 # about program window
 class AboutWindow(CommonWidget):
     def __init__(self):

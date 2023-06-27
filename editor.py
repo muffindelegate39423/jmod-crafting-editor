@@ -23,7 +23,8 @@ def main():
 # function that creates setup.ini
 def create_setup_ini(setup,setup_ini):
     setup['DEFAULT'] = {'lang': 'en_us',
-                        'path': ''}
+                        'path': '',
+                        'updates': 'True'}
     setup.write(open(setup_ini,'w'))
 
 # execute program

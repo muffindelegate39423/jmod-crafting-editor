@@ -2,6 +2,7 @@ import tkinter as tk
 from .widgets import *
 from .config_opener import *
 from .about_window import *
+from .update_checker import *
 from ..lib import dictfuncs
 import configparser
 
@@ -9,6 +10,9 @@ import configparser
 class MainWindow(CommonWidget):
     def __init__(self):
         super().__init__(parent=None,row_num=None,column_num=None)
+        # check for program updates if enabled
+        if self.setup['DEFAULT']['updates'] == "True":
+            UpdateChecker(CommonWidget)
         # window info
         self.root = tk.Tk()
         self.root.resizable(0,0)
