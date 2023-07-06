@@ -12,7 +12,7 @@ class MainWindow(CommonWidget):
         super().__init__(parent=None,row_num=None,column_num=None)
         # check for program updates if enabled
         if self.setup['DEFAULT']['updates'] == "True":
-            UpdateChecker(CommonWidget)
+            UpdateChecker(CommonWidget,notify_no_updates=False)
         # window info
         self.root = tk.Tk()
         self.root.resizable(0,0)
@@ -107,6 +107,8 @@ class MainWindow(CommonWidget):
             label=self.lang['MENU']['help'],
             menu=self.help_menu)
         self.help_menu.add_command(label=self.lang['MENU']['about'],command=self.open_about_window)
+        self.help_menu.add_separator()
+        self.help_menu.add_command(label=self.lang['MENU']['updates'],command=self.check_for_updates)
         # =====================
         # set data
         self.set_data()
@@ -160,6 +162,9 @@ class MainWindow(CommonWidget):
     # opens "about program" window
     def open_about_window(self):
         AboutWindow()
+    # checks for editor updates on github
+    def check_for_updates(self):
+        UpdateChecker(CommonWidget,notify_no_updates=True)
     # terminates program
     def exit(self):
         exit()

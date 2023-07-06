@@ -61,6 +61,7 @@ file = File
 edit = Edit
 help = Help
 about = About
+updates = Check for Updates
 
 [ABOUT]
 program = Unofficial JMod Crafting Editor
@@ -84,3 +85,5 @@ cancel = Cancel
 title = New Update
 missing = The Requests module is required in order for this program to check for updates. It can be installed by entering "python -m pip install requests" in your preferred command prompt/terminal.
 new = A new editor update is available. Do you want to download it?
+none = No editor updates are currently available.
+no_connection = Unable to connect to GitHub for editor updates.

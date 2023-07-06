@@ -15,7 +15,7 @@ _UPDATE_PAGE = "https://github.com/muffindelegate39423/jmod-crafting-editor/rele
 
 # popup message that checks for program updates on github
 class UpdateChecker:
-    def __init__(self,CommonWidget):
+    def __init__(self,CommonWidget,notify_no_updates):
         self.common = CommonWidget(parent=None,row_num=None,column_num=None) # can't inherit due to limitations with python
         self.lang = self.common.lang
         if not_installed == False: # if the requests module is installed
@@ -29,8 +29,14 @@ class UpdateChecker:
                                                           message=self.lang['UPDATE']['new'])
                     if download_update == True: # opens update page if the user wants to update
                         webbrowser.open_new_tab(_UPDATE_PAGE)
+                else: # if program is on latest version...
+                    if notify_no_updates == True: # notify user that it is
+                        messagebox.showinfo(title=self.lang['MESSAGEBOX']['info'],
+                                            message=self.lang['UPDATE']['none'])
             except requests.exceptions.ConnectionError:
-                pass # skip update check if there's connection error
+                if notify_no_updates == True: # if there's a connection error, notify user
+                    messagebox.showerror(title=self.lang['MESSAGEBOX']['error'],
+                                        message=self.lang['UPDATE']['no_connection'])
         else: # show a warning if the module isn't installed
             messagebox.showwarning(title=self.lang['MESSAGEBOX']['warning'],
                                    message=self.lang['UPDATE']['missing'])
