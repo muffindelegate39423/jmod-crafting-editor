@@ -16,7 +16,7 @@ _setup_ini = []   # setup.ini path
 def set_lang(path):
     global _lang
     _lang = ConfigParser()
-    _lang.read(path)
+    _lang.read(path,encoding='utf-8')
 
 # function that sets the jmod dictionary
 # from current config file
@@ -34,7 +34,7 @@ def set_setup(setup,setup_ini):
 # function that saves the setup data
 # to setup.ini
 def save_setup():
-    _setup.write(open(_setup_ini,'w'))
+    _setup.write(open(_setup_ini,'w',encoding='utf-8'))
 
 # widget with common data and operations
 # inherited by most widgets in this program

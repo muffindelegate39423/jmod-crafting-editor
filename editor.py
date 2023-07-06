@@ -12,8 +12,8 @@ def main():
     # create setup.ini if it doesn't exist
     if path.exists(setup_ini) == False:
         create_setup_ini(setup,setup_ini)
-    else: # otherwise, load it
-        setup.read(setup_ini)
+    # load setup.ini
+    setup.read(setup_ini,encoding='utf-8')
     # proceed to setting up the gui
     GuiSetup(setup=setup,
              setup_ini=setup_ini,

@@ -18,8 +18,7 @@ def format_search_string(searchStr):
     search_string = ''.join(searchStr.split()).lower()
     return search_string
 
-# function that returns a rainbow
-# color table
+# function that returns a rainbow color table
 # (credit: @Korozin for values)
 def get_color_table():
     color_table = (
