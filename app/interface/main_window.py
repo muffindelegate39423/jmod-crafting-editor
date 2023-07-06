@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from .widgets import *
 from .config_opener import *
 from .about_window import *
@@ -75,12 +76,18 @@ class MainWindow(CommonWidget):
                                        text=self.lang["COMMAND"]["delete"],
                                        command=self.delete_craftables)
         self.delete_button.grid(row=1,column=1)
+        # command: sort craftables
+        self.sort_button = tk.Button(self.button_frame,
+                                       width=COMMAND_WIDTH,height=COMMAND_HEIGHT,
+                                       text=self.lang["COMMAND"]["sort"],
+                                       command=self.sort_craftables)
+        self.sort_button.grid(row=1,column=2)
         # command: exit program
         self.exit_button = tk.Button(self.button_frame,
                                      width=COMMAND_WIDTH,height=COMMAND_HEIGHT,
                                      text=self.lang["COMMAND"]["exit"],
                                      command=self.exit)
-        self.exit_button.grid(row=1,column=2)
+        self.exit_button.grid(row=2,column=1)
         # ======= MENUS =======
         # file menu
         self.file_menu = tk.Menu(self.menu_bar,tearoff=False)
@@ -100,15 +107,17 @@ class MainWindow(CommonWidget):
         self.edit_menu.add_command(label=self.lang['COMMAND']['new'],command=self.create_new_craftable)
         self.edit_menu.add_command(label=self.lang['COMMAND']['delete'],command=self.delete_craftables)
         self.edit_menu.add_separator()
+        self.edit_menu.add_command(label=self.lang['COMMAND']['sort'],command=self.sort_craftables)
+        self.edit_menu.add_separator()
         self.edit_menu.add_command(label=self.lang['WIDGET']['apply'],command=self.craftables_edit_frame.apply_changes)
         # help menu
         self.help_menu = tk.Menu(self.menu_bar,tearoff=False)
         self.menu_bar.add_cascade(
             label=self.lang['MENU']['help'],
             menu=self.help_menu)
-        self.help_menu.add_command(label=self.lang['MENU']['about'],command=self.open_about_window)
-        self.help_menu.add_separator()
         self.help_menu.add_command(label=self.lang['MENU']['updates'],command=self.check_for_updates)
+        self.help_menu.add_separator()
+        self.help_menu.add_command(label=self.lang['MENU']['about'],command=self.open_about_window)
         # =====================
         # set data
         self.set_data()
@@ -165,6 +174,16 @@ class MainWindow(CommonWidget):
     # checks for editor updates on github
     def check_for_updates(self):
         UpdateChecker(CommonWidget,notify_no_updates=True)
+    # sorts craftables by name
+    def sort_craftables(self):
+        # ask the user if they really want to sort
+        confirm_sort = messagebox.askyesno(title=self.lang['MESSAGEBOX']['question'],
+                                           message=self.lang['CRAFTABLE']['sort'])
+        if confirm_sort == True: # if the user wants to sort, let it sort
+            temp = self.get_jmod_dict()
+            dictfuncs.sort_craftables(temp,self.get_jmod_version())
+            set_jmod_dict(temp)
+            self.craftables_list_frame.reload_craftables()
     # terminates program
     def exit(self):
         exit()

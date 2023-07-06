@@ -124,3 +124,7 @@ def create_new_craftable(jmod_dict,jmod_version,craftable_name):
     data['description'] = ""
     # add to dict
     jmod_dict['Craftables'][craftable_name] = data
+
+# sorts craftables in jmod dict in alphabetical order
+def sort_craftables(jmod_dict,jmod_version):
+    jmod_dict['Craftables'] = dict(sorted(jmod_dict['Craftables'].items()))
