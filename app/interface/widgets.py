@@ -120,7 +120,7 @@ class FancyEntry(EntryWidget):
         # fancy label
         self.fancy_label = tk.Label(self.fancy_frame,
                                     text=string,
-                                    font=('TkDefaultFont',10,'underline'))
+                                    font=('TkDefaultFont',9))
         self.fancy_label.grid(row=self.fancy_frame.get_available_row(),
                               column=0,sticky='w')
         # entry field is in inherited objects
@@ -391,19 +391,13 @@ class ReqEditTree(CommonWidget):
         # crafting reqs boxlist
         self.crafting_reqs_list = []
         # req edit frame
-        self.req_edit_frame = FrameWidget(parent)
+        self.req_edit_frame = ttk.LabelFrame(parent,text=self.lang['CRAFTABLE']['crafting_reqs'])
         self.req_edit_frame.grid(row=row_num,column=column_num,sticky='w')
-        # req label
-        self.req_label = tk.Label(self.req_edit_frame,
-                                  text=self.lang['CRAFTABLE']['crafting_reqs'],
-                                  font=('TkDefaultFont',10,'underline'))
-        self.req_label.grid(row=self.req_edit_frame.get_available_row(),
-                            column=0,sticky='w')
         # req edit tree
         self.req_edit_tree = ttk.Treeview(self.req_edit_frame,
                                           column=('c1','c2'),
                                           show='headings',height=8)
-        self.req_edit_tree.grid(row=self.req_edit_frame.get_available_row(),
+        self.req_edit_tree.grid(row=0,
                                 column=0)
         self.req_edit_tree.column('#1',anchor='w',width=135)
         self.req_edit_tree.heading('#1',text=self.lang['WIDGET']['material'])
@@ -411,7 +405,7 @@ class ReqEditTree(CommonWidget):
         self.req_edit_tree.heading('#2',text=self.lang['WIDGET']['amount'])
         # button frame
         self.button_frame = FrameWidget(self.req_edit_frame)
-        self.button_frame.grid(row=self.req_edit_frame.get_available_row(),
+        self.button_frame.grid(row=1,
                                column=0)
         # new button
         self.new_button = tk.Button(self.button_frame,

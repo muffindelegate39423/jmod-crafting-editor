@@ -1,6 +1,6 @@
 # returns supported jmod versions
 def _get_supported_versions():
-    supported_versions = ('40.0','40.6','42.5')
+    supported_versions = ('40.0','40.6','42.5','43.0')
     return supported_versions
 
 # is the config valid (readable)?

@@ -6,7 +6,7 @@
 A simple, graphical crafting editor for [JMod](https://steamcommunity.com/sharedfiles/filedetails/?id=1919689921). Made with Tkinter.
 
 ## Supported JMod Versions
-- **40.0, 40.6, 42.5**
+- **40.0, 40.6, 42.5, 43.0**
 
 ## Features
 - Search for craftable names
