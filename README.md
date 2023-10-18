@@ -17,6 +17,10 @@ A simple, graphical crafting editor for [JMod](https://steamcommunity.com/shared
 
 ## Requirements
 - [Python version 3.11 or later](https://www.python.org/downloads/)
+- [Requests](https://pypi.org/project/requests/) (optional, for updates)
+    ```
+    pip install requests
+    ```
 - A JMod config file
 
 ## How to Run

@@ -770,7 +770,8 @@ class CraftablesListFrame(CommonWidget):
             delete_window = DeleteWindow(CommonWidget,FrameWidget,
                                          listbox=self.craftables_listbox,
                                          selected_items=selected_craftables,
-                                         selected_label=self.selected_label)
+                                         selected_label=self.selected_label,
+                                         clear_edit_frame=self.craftables_edit_frame.clear_entries)
     # reloads craftable names inside listbox
     def reload_craftables(self):
         temp = self.get_jmod_dict()
