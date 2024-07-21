@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 _STATIC_CRAFTING_TYPE_VERSIONS = ['40.0','40.6','42.5','43.0'] # versions that only allow one crafting type per item
 _DYNAMIC_CRAFTING_TYPE_VERSIONS = ['49.6'] # versions that allow for multiple crafting types for items
 
@@ -93,6 +95,28 @@ def fix_crafting_types(jmod_dict):
         if hasSpace:
             curType = curType.split(delim)
             jmod_dict['Craftables'][c]['craftingType'] = curType
+    return jmod_dict
+
+# for loading: formats results of each item for jmod dict
+def format_results(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curResults = jmod_dict['Craftables'][c]['results']
+        jmod_dict['Craftables'][c]['results'] = str(curResults)
+    return jmod_dict
+
+# for saving: fixes results of each item in jmod dict
+def fix_results(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curResults = jmod_dict['Craftables'][c]['results']
+        isString = type(curResults) == str
+        if isString:
+            try:
+                temp = literal_eval(curResults)
+                isList = type(temp) == list
+                if isList:
+                    jmod_dict['Craftables'][c]['results'] = temp
+            except:
+                pass
     return jmod_dict
 
 # returns craftable name from jmod dict

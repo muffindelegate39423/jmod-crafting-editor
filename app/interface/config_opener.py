@@ -26,6 +26,8 @@ class ConfigOpener(CommonWidget):
         if dictfuncs.supports_dynamic_crafting_types(dictfuncs.get_jmod_version(config)):
             # format dynamic crafting types for interface
             config = dictfuncs.format_crafting_types(config)
+        # convert every item result to string
+        config = dictfuncs.format_results(config)
         return config
     # returns config when launching the program
     def launch_config(self,config_path):
@@ -99,6 +101,8 @@ class ConfigOpener(CommonWidget):
         # if jmod version >= 49.6, then fix crafting types before saving
         if dictfuncs.supports_dynamic_crafting_types(dictfuncs.get_jmod_version(config)):
             config = dictfuncs.fix_crafting_types(config)
+        # fix all item results before saving
+        config = dictfuncs.fix_results(config)
         # saves config
         with open(config_path,'w',encoding='utf8') as f:
             json.dump(config,f,indent=4,ensure_ascii=False)
