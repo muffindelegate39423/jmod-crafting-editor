@@ -1,7 +1,14 @@
+_STATIC_CRAFTING_TYPE_VERSIONS = ['40.0','40.6','42.5','43.0'] # versions that only allow one crafting type per item
+_DYNAMIC_CRAFTING_TYPE_VERSIONS = ['49.6'] # versions that allow for multiple crafting types for items
+
 # returns supported jmod versions
 def _get_supported_versions():
-    supported_versions = ('40.0','40.6','42.5','43.0')
+    supported_versions = _STATIC_CRAFTING_TYPE_VERSIONS + _DYNAMIC_CRAFTING_TYPE_VERSIONS
     return supported_versions
+
+# does the jmod version support multiple crafting types per item?
+def supports_dynamic_crafting_types(jmod_version):
+    return jmod_version in _DYNAMIC_CRAFTING_TYPE_VERSIONS or float(jmod_version) >= float(_DYNAMIC_CRAFTING_TYPE_VERSIONS[0])
 
 # is the config valid (readable)?
 def is_valid_config(config_txt):
@@ -93,13 +100,13 @@ def get_crafting_types(jmod_dict,jmod_version):
     for c in jmod_dict['Craftables']:
         try:
             curType = jmod_dict['Craftables'][c]['craftingType']
-            isList = type(curType) == "list"
+            isList = type(curType) == list
             # fix for 49.6
             if isList:
-                for c in curType:
-                    temp.add(c)
+                for d in curType:
+                    temp.add(d)
             else:
-                temp.add(c)
+                temp.add(curType)
         except KeyError:
             pass
     temp = list(temp)
