@@ -19,11 +19,21 @@ class ConfigOpener(CommonWidget):
         proceed = messagebox.askyesno(title=self.lang['MESSAGEBOX']['question'],
                                       message=self.lang['CONFIGFILE']['confirm_open'])
         return proceed
+    # loads and process config (for self.launch_config, self.open_config, and self.quick_open_config)
+    def _load_config(self,config_path):
+        config = json.loads(open(config_path,'r',encoding='utf-8').read())
+        # if config is version 49.6 or later
+        if dictfuncs.supports_dynamic_crafting_types(dictfuncs.get_jmod_version(config)):
+            # format dynamic crafting types for interface
+            config = dictfuncs.format_crafting_types(config)
+        # convert every item result to string
+        config = dictfuncs.format_results(config)
+        return config
     # returns config when launching the program
     def launch_config(self,config_path):
         if config_path != "": # if this program has been used previously...
             try: # attempt to open the last config
-                config = json.loads(open(config_path,'r').read())
+                config = self._load_config(config_path)
                 # check config if it's valid/supported
                 if dictfuncs.is_valid_config(config) == False:
                     raise Exception # raise an exception if it's invalid
@@ -55,7 +65,7 @@ class ConfigOpener(CommonWidget):
                 filetypes=[(self.lang['FILETYPE']['jmod'],"*.txt"),
                 (self.lang['FILETYPE']['all'],"*.*")])
             if open_from:
-                config = json.loads(open(open_from,'r').read())
+                config = self._load_config(open_from)
                 # if it's a valid config
                 if dictfuncs.is_valid_config(config) == True:
                     valid = True # set valid boolean as true
@@ -74,9 +84,9 @@ class ConfigOpener(CommonWidget):
                     # and loop
             else:
                 return -1 # close program
-    # quick open config without doing any checks
+    # quick open config without doing any additional checks
     def quick_open_config(self,config_path):
-        config = json.loads(open(config_path,'r').read())
+        config = self._load_config(config_path)
         return config
     # saves config to specified path
     def save_config(self,config,path):
@@ -88,9 +98,14 @@ class ConfigOpener(CommonWidget):
             temp = os.path.splitext(temp)
             temp = os.path.join(config_dir,temp[0]+"_BAK"+temp[1])
             copyfile(config_path,temp)
+        # if jmod version >= 49.6, then fix crafting types before saving
+        if dictfuncs.supports_dynamic_crafting_types(dictfuncs.get_jmod_version(config)):
+            config = dictfuncs.fix_crafting_types(config)
+        # fix all item results before saving
+        config = dictfuncs.fix_results(config)
         # saves config
-        with open(config_path,'w') as f:
-            json.dump(config,f,indent=4)
+        with open(config_path,'w',encoding='utf8') as f:
+            json.dump(config,f,indent=4,ensure_ascii=False)
     # lets user specify path to save config to
     def save_config_as(self,config,curPath):
         temp = pathlib.Path(curPath)

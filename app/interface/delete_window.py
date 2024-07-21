@@ -4,15 +4,19 @@ from ..lib import dictfuncs
 
 # window shown for pending craftables to delete
 class DeleteWindow:
-    def __init__(self,CommonWidget,FrameWidget,listbox,selected_items,selected_label):
+    def __init__(self,CommonWidget,FrameWidget,listbox,selected_items,selected_label,clear_edit_frame):
         self.common = CommonWidget(parent=None,row_num=None,column_num=None) # can't inherit due to limitations with python
         self.lang = self.common.lang
         # listbox to manipulate
         self.listbox = listbox
         # selected items
         self.selected_items = selected_items
+        # selected item count
+        self.count = len(self.selected_items)
         # selected label
         self.selected_label = selected_label
+        # clear edit frame function
+        self.clear_edit_frame = clear_edit_frame
         # window info
         self.root = tk.Toplevel()
         self.root.title(self.lang['WINDOW']['pending'])
@@ -25,7 +29,7 @@ class DeleteWindow:
         # pending label
         pending_label = tk.Label(pending_frame,
                                  text=self.lang['CRAFTABLE']['pending'].format(
-                                 newline='\n'),
+                                 newline='\n', count=self.count),
                                  font=('TkDefaultFont',9,'bold'))
         pending_label.pack()
         # pending listbox
@@ -48,17 +52,13 @@ class DeleteWindow:
         self.root.bind("<Escape>",lambda event:self.root.destroy())
     # asks if user wants to remove the items and, if so, remove them from listbox
     def delete_craftables(self):
-        count = len(self.selected_items)
-        proceed = messagebox.askyesno(title=self.lang['MESSAGEBOX']['question'],
-                                         message=self.lang['CRAFTABLE']['delete'].format(
-                                         count=str(count)))
-        if proceed == True:
-            try:
-                dictfuncs.remove_craftables(self.common.get_jmod_dict(),
-                                            self.common.get_jmod_version(),
-                                            self.selected_items)
-                self.listbox.remove_item_names(self.selected_items)
-            except (KeyError, ValueError):
-                pass
-            self.selected_label.clear()
+        try:
+            dictfuncs.remove_craftables(self.common.get_jmod_dict(),
+                                        self.common.get_jmod_version(),
+                                        self.selected_items)
+            self.listbox.remove_item_names(self.selected_items)
+        except (KeyError, ValueError):
+            pass
+        self.selected_label.clear()
+        self.clear_edit_frame()
         self.root.destroy()

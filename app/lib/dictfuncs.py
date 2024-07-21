@@ -1,7 +1,20 @@
+from ast import literal_eval
+
+_STATIC_CRAFTING_TYPE_VERSIONS = ['40.0','40.6','42.5','43.0'] # versions that only allow one crafting type per item
+_DYNAMIC_CRAFTING_TYPE_VERSIONS = ['49.6'] # versions that allow for multiple crafting types for items
+
 # returns supported jmod versions
 def _get_supported_versions():
-    supported_versions = ('40.0','40.6','42.5')
+    supported_versions = _STATIC_CRAFTING_TYPE_VERSIONS + _DYNAMIC_CRAFTING_TYPE_VERSIONS
     return supported_versions
+
+# does the jmod version support multiple crafting types per item?
+def supports_dynamic_crafting_types(jmod_version):
+    try:
+        jmod_version = float(jmod_version)
+        return (jmod_version in _DYNAMIC_CRAFTING_TYPE_VERSIONS) or (jmod_version >= float(_DYNAMIC_CRAFTING_TYPE_VERSIONS[0]))
+    except ValueError:
+        return False
 
 # is the config valid (readable)?
 def is_valid_config(config_txt):
@@ -62,6 +75,50 @@ def get_craftable_data(jmod_dict,jmod_version,craftable_name,size_scale,crafting
         except KeyError:
             pass
 
+# for loading: formats crafting types of each item for jmod dict (for version 49.6 and later)
+def format_crafting_types(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curType = jmod_dict['Craftables'][c]['craftingType']
+        isList = type(curType) == list
+        if isList:
+            delim = " "
+            curType = delim.join([d for d in curType])
+            jmod_dict['Craftables'][c]['craftingType'] = curType
+    return jmod_dict
+
+# for saving: fixes crafting types for each item in jmod dict (for version 49.6 and later)
+def fix_crafting_types(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curType = jmod_dict['Craftables'][c]['craftingType']
+        delim = " "
+        hasSpace = curType.find(delim) != -1
+        if hasSpace:
+            curType = curType.split(delim)
+            jmod_dict['Craftables'][c]['craftingType'] = curType
+    return jmod_dict
+
+# for loading: formats results of each item for jmod dict
+def format_results(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curResults = jmod_dict['Craftables'][c]['results']
+        jmod_dict['Craftables'][c]['results'] = str(curResults)
+    return jmod_dict
+
+# for saving: fixes results of each item in jmod dict
+def fix_results(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curResults = jmod_dict['Craftables'][c]['results']
+        isString = type(curResults) == str
+        if isString:
+            try:
+                temp = literal_eval(curResults)
+                isList = type(temp) == list
+                if isList:
+                    jmod_dict['Craftables'][c]['results'] = temp
+            except:
+                pass
+    return jmod_dict
+
 # returns craftable name from jmod dict
 def get_craftable_names(jmod_dict,jmod_version):
     temp = []
@@ -89,14 +146,20 @@ def get_categories(jmod_dict,jmod_version):
 
 # returns crafting types from jmod dict
 def get_crafting_types(jmod_dict,jmod_version):
-    temp = []
+    temp = set()
     for c in jmod_dict['Craftables']:
         try:
             curType = jmod_dict['Craftables'][c]['craftingType']
-            if curType not in temp:
-                temp.append(curType)
+            isList = type(curType) == list
+            # fix for 49.6
+            if isList:
+                for d in curType:
+                    temp.add(d)
+            else:
+                temp.add(curType)
         except KeyError:
             pass
+    temp = list(temp)
     temp.sort()
     return temp
 
@@ -124,3 +187,7 @@ def create_new_craftable(jmod_dict,jmod_version,craftable_name):
     data['description'] = ""
     # add to dict
     jmod_dict['Craftables'][craftable_name] = data
+
+# sorts craftables in jmod dict in alphabetical order
+def sort_craftables(jmod_dict,jmod_version):
+    jmod_dict['Craftables'] = dict(sorted(jmod_dict['Craftables'].items()))

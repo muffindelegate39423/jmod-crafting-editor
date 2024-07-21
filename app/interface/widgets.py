@@ -16,7 +16,7 @@ _setup_ini = []   # setup.ini path
 def set_lang(path):
     global _lang
     _lang = ConfigParser()
-    _lang.read(path)
+    _lang.read(path,encoding='utf-8')
 
 # function that sets the jmod dictionary
 # from current config file
@@ -34,7 +34,7 @@ def set_setup(setup,setup_ini):
 # function that saves the setup data
 # to setup.ini
 def save_setup():
-    _setup.write(open(_setup_ini,'w'))
+    _setup.write(open(_setup_ini,'w',encoding='utf-8'))
 
 # widget with common data and operations
 # inherited by most widgets in this program
@@ -120,7 +120,7 @@ class FancyEntry(EntryWidget):
         # fancy label
         self.fancy_label = tk.Label(self.fancy_frame,
                                     text=string,
-                                    font=('TkDefaultFont',10,'underline'))
+                                    font=('TkDefaultFont',9))
         self.fancy_label.grid(row=self.fancy_frame.get_available_row(),
                               column=0,sticky='w')
         # entry field is in inherited objects
@@ -391,19 +391,13 @@ class ReqEditTree(CommonWidget):
         # crafting reqs boxlist
         self.crafting_reqs_list = []
         # req edit frame
-        self.req_edit_frame = FrameWidget(parent)
+        self.req_edit_frame = ttk.LabelFrame(parent,text=self.lang['CRAFTABLE']['crafting_reqs'])
         self.req_edit_frame.grid(row=row_num,column=column_num,sticky='w')
-        # req label
-        self.req_label = tk.Label(self.req_edit_frame,
-                                  text=self.lang['CRAFTABLE']['crafting_reqs'],
-                                  font=('TkDefaultFont',10,'underline'))
-        self.req_label.grid(row=self.req_edit_frame.get_available_row(),
-                            column=0,sticky='w')
         # req edit tree
         self.req_edit_tree = ttk.Treeview(self.req_edit_frame,
                                           column=('c1','c2'),
                                           show='headings',height=8)
-        self.req_edit_tree.grid(row=self.req_edit_frame.get_available_row(),
+        self.req_edit_tree.grid(row=0,
                                 column=0)
         self.req_edit_tree.column('#1',anchor='w',width=135)
         self.req_edit_tree.heading('#1',text=self.lang['WIDGET']['material'])
@@ -411,7 +405,7 @@ class ReqEditTree(CommonWidget):
         self.req_edit_tree.heading('#2',text=self.lang['WIDGET']['amount'])
         # button frame
         self.button_frame = FrameWidget(self.req_edit_frame)
-        self.button_frame.grid(row=self.req_edit_frame.get_available_row(),
+        self.button_frame.grid(row=1,
                                column=0)
         # new button
         self.new_button = tk.Button(self.button_frame,
@@ -769,13 +763,15 @@ class CraftablesListFrame(CommonWidget):
     # opens delete window 
     # (requires at least 1 selected craftable to open)
     def open_delete_window(self):
-        selection_count = len(self.craftables_listbox.curselection())
+        selected_items = self.selected_label.get_selected_items()
+        selection_count = len(selected_items)
         if selection_count > 0:
-            selected_craftables = self.selected_label.get_selected_items()
+            selected_craftables = selected_items
             delete_window = DeleteWindow(CommonWidget,FrameWidget,
                                          listbox=self.craftables_listbox,
                                          selected_items=selected_craftables,
-                                         selected_label=self.selected_label)
+                                         selected_label=self.selected_label,
+                                         clear_edit_frame=self.craftables_edit_frame.clear_entries)
     # reloads craftable names inside listbox
     def reload_craftables(self):
         temp = self.get_jmod_dict()
