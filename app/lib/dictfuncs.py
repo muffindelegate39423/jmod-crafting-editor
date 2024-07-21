@@ -89,14 +89,20 @@ def get_categories(jmod_dict,jmod_version):
 
 # returns crafting types from jmod dict
 def get_crafting_types(jmod_dict,jmod_version):
-    temp = []
+    temp = set()
     for c in jmod_dict['Craftables']:
         try:
             curType = jmod_dict['Craftables'][c]['craftingType']
-            if curType not in temp:
-                temp.append(curType)
+            isList = type(curType) == "list"
+            # fix for 49.6
+            if isList:
+                for c in curType:
+                    temp.add(c)
+            else:
+                temp.add(c)
         except KeyError:
             pass
+    temp = list(temp)
     temp.sort()
     return temp
 
