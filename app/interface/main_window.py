@@ -151,6 +151,7 @@ class MainWindow(CommonWidget):
     def save_config(self):
         config_saver = ConfigOpener()
         config_saver.save_config(self.get_jmod_dict(),self.setup['DEFAULT']['path'])
+        set_jmod_dict(config_saver.quick_open_config(self.setup['DEFAULT']['path']))
     # saves current config to a specified path
     def save_config_as(self):
         config_saver = ConfigOpener()

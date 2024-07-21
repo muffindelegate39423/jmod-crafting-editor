@@ -8,7 +8,11 @@ def _get_supported_versions():
 
 # does the jmod version support multiple crafting types per item?
 def supports_dynamic_crafting_types(jmod_version):
-    return jmod_version in _DYNAMIC_CRAFTING_TYPE_VERSIONS or float(jmod_version) >= float(_DYNAMIC_CRAFTING_TYPE_VERSIONS[0])
+    try:
+        jmod_version = float(jmod_version)
+        return (jmod_version in _DYNAMIC_CRAFTING_TYPE_VERSIONS) or (jmod_version >= float(_DYNAMIC_CRAFTING_TYPE_VERSIONS[0]))
+    except ValueError:
+        return False
 
 # is the config valid (readable)?
 def is_valid_config(config_txt):
@@ -68,6 +72,28 @@ def get_craftable_data(jmod_dict,jmod_version,craftable_name,size_scale,crafting
             i.append(data[keys[id(i)]])
         except KeyError:
             pass
+
+# for loading: formats crafting types of each item for jmod dict (for version 49.6 and later)
+def format_crafting_types(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curType = jmod_dict['Craftables'][c]['craftingType']
+        isList = type(curType) == list
+        if isList:
+            delim = " "
+            curType = delim.join([d for d in curType])
+            jmod_dict['Craftables'][c]['craftingType'] = curType
+    return jmod_dict
+
+# for saving: fixes crafting types for each item in jmod dict (for version 49.6 and later)
+def fix_crafting_types(jmod_dict):
+    for c in jmod_dict['Craftables']:
+        curType = jmod_dict['Craftables'][c]['craftingType']
+        delim = " "
+        hasSpace = curType.find(delim) != -1
+        if hasSpace:
+            curType = curType.split(delim)
+            jmod_dict['Craftables'][c]['craftingType'] = curType
+    return jmod_dict
 
 # returns craftable name from jmod dict
 def get_craftable_names(jmod_dict,jmod_version):
