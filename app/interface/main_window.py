@@ -171,7 +171,6 @@ class MainWindow(CommonWidget):
         self.craftables_list_frame.show_item(self.lang['CRAFTABLE']['new'])
     # deletes selected craftables
     def delete_craftables(self):
-        self.craftables_edit_frame.apply_changes()
         self.craftables_list_frame.open_delete_window()
     # opens "about program" window
     def open_about_window(self):
