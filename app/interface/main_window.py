@@ -163,6 +163,7 @@ class MainWindow(CommonWidget):
             self.set_data()
     # creates new craftable
     def create_new_craftable(self):
+        self.craftables_edit_frame.apply_changes()
         dictfuncs.create_new_craftable(self.get_jmod_dict(),
                                        self.get_jmod_version(),
                                        self.lang['CRAFTABLE']['new'])
@@ -170,6 +171,7 @@ class MainWindow(CommonWidget):
         self.craftables_list_frame.show_item(self.lang['CRAFTABLE']['new'])
     # deletes selected craftables
     def delete_craftables(self):
+        self.craftables_edit_frame.apply_changes()
         self.craftables_list_frame.open_delete_window()
     # opens "about program" window
     def open_about_window(self):
@@ -179,6 +181,7 @@ class MainWindow(CommonWidget):
         UpdateChecker(CommonWidget,notify_no_updates=True)
     # sorts craftables by name
     def sort_craftables(self):
+        self.craftables_edit_frame.apply_changes()
         # ask the user if they really want to sort
         confirm_sort = messagebox.askyesno(title=self.lang['MESSAGEBOX']['question'],
                                            message=self.lang['CRAFTABLE']['sort'])
