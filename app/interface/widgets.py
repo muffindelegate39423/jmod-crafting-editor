@@ -841,7 +841,7 @@ class CraftablesEditFrame(CommonWidget):
         # apply changes button
         self.apply_button = tk.Button(self.craftables_edit_frame,
                                       text=self.lang['WIDGET']['apply'],
-                                      command=self.apply_changes)
+                                      command=lambda:self.apply_changes(manual=True))
         self.apply_button.grid(row=self.craftables_edit_frame.get_available_row(),
                                column=0,pady=20,sticky='e')
     # sets list frame needed when applying changes
@@ -856,7 +856,7 @@ class CraftablesEditFrame(CommonWidget):
         self.category_combobox.set_boxlist(self.categories_list)
         self.crafting_type_combobox.set_boxlist(self.crafting_types_list)
     # apply changes to edited craftable
-    def apply_changes(self):
+    def apply_changes(self,manual=False):
         new_name = self.name_entry.get_entry()
         # if the craftable's new name isn't blank
         if new_name != "" and new_name.isspace() == False:
@@ -888,7 +888,8 @@ class CraftablesEditFrame(CommonWidget):
                 InternalErrorMessage("List frame not binded OR missing dictfunc")
         else: # if the craftable's name has been changed to blank
             # show an error message saying that it can't be blank
-            messagebox.showerror(title=self.lang['MESSAGEBOX']['error'],message=self.lang['CRAFTABLE']['blank'])
+            if manual:
+                messagebox.showerror(title=self.lang['MESSAGEBOX']['error'],message=self.lang['CRAFTABLE']['blank'])
     # clears all entries
     def clear_entries(self):
         self.name_entry.clear()

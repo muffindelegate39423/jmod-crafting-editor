@@ -149,11 +149,13 @@ class MainWindow(CommonWidget):
             self.set_data() # reload data
     # saves current config
     def save_config(self):
+        self.craftables_edit_frame.apply_changes()
         config_saver = ConfigOpener()
         config_saver.save_config(self.get_jmod_dict(),self.setup['DEFAULT']['path'])
         set_jmod_dict(config_saver.quick_open_config(self.setup['DEFAULT']['path']))
     # saves current config to a specified path
     def save_config_as(self):
+        self.craftables_edit_frame.apply_changes()
         config_saver = ConfigOpener()
         is_saved = config_saver.save_config_as(self.get_jmod_dict(),self.setup['DEFAULT']['path'])
         if is_saved == True: # if the user did save

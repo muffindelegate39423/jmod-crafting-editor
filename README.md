@@ -14,6 +14,7 @@ A simple, graphical crafting editor for [JMod](https://steamcommunity.com/shared
 - Create and delete craftables
 - Add new crafting reqs, categories, and crafting types
 - Save configs to specified path
+- Sort craftables in alphabetical order
 
 ## Requirements
 - [Python version 3.11 or later](https://www.python.org/downloads/)
