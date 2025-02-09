@@ -1,6 +1,6 @@
 # Unofficial JMod Crafting Editor
 
-[!WARNING]  
+> [!WARNING]  
 > I am not responsible for any data loss. Use this program at your own risk!
 
 <img src="img/editor.png" alt="editor" width="350"/>
