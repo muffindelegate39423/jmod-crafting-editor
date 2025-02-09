@@ -1,5 +1,7 @@
 # Unofficial JMod Crafting Editor
-**I AM NOT RESPONSIBLE FOR ANY DATA LOSS. USE THIS PROGRAM AT YOUR OWN RISK!**
+
+[!WARNING]  
+> I am not responsible for any data loss. Use this program at your own risk!
 
 <img src="img/editor.png" alt="editor" width="350"/>
 
